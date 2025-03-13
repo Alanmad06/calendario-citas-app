@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+
 
 interface Appointment {
   id: string;
@@ -19,6 +19,7 @@ interface Appointment {
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
+  console.log(session)
   const router = useRouter();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);

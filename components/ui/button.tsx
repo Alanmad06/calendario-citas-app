@@ -40,10 +40,8 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    // Si asChild es true, deberíamos usar Slot de Radix UI o un enfoque similar
-    // Como no tenemos Slot importado, usaremos button por ahora
-    // Esto debe ser corregido importando Slot de @radix-ui/react-slot si se necesita asChild
+  ({ className, variant, size, ...props }, ref) => {
+    // We're not using asChild functionality since we don't have Slot imported
     return (
       <button
         className={cn(buttonVariants({ variant, size, className }))}

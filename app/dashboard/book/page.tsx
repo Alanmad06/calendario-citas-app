@@ -15,7 +15,8 @@ interface Service {
 }
 
 export default function BookingPage() {
-  const { data: session, status } = useSession();
+ // const { data: session, status } = useSession();
+  const {  status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const serviceId = searchParams.get('service');
@@ -150,19 +151,17 @@ export default function BookingPage() {
       const [hours, minutes] = selectedTime.split(':').map(Number);
       appointmentDate.setHours(hours, minutes);
       
-      const appointmentData = {
-        serviceId: selectedService.id,
-        date: appointmentDate.toISOString(),
-        userId: session?.user.id,
-      };
-      
       // This would be replaced with an actual API call
       // const response = await fetch('/api/appointments', {
       //   method: 'POST',
       //   headers: {
       //     'Content-Type': 'application/json',
       //   },
-      //   body: JSON.stringify(appointmentData),
+      //   body: JSON.stringify({
+      //     serviceId: selectedService.id,
+      //     date: appointmentDate.toISOString(),
+      //     userId: session?.user.id,
+      //   }),
       // });
       // 
       // if (!response.ok) {

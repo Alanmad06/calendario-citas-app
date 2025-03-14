@@ -3,9 +3,19 @@
 @theme {
   --background: #171717;
   --foreground: #171717;
-  --primary: #171717;
-  --primary-foreground: #ffffff;
-  --color-primary: #171717; /* RGB values of #0070f3 for Tailwind */
+   /*--primary: #171717*/
+  --primary-foreground: #1a75ff;
+  --color-primary: #0070f3; 
+  --color-primary-50: #e6f0ff;
+  --color-primary-100: #b3d1ff;
+  --color-primary-200: #80b3ff;
+  --color-primary-300: #4d94ff;
+  --color-primary-400: #1a75ff;
+  --color-primary-500: #0070f3;
+  --color-primary-600: #0057c0;
+  --color-primary-700: #003e8e;
+  --color-primary-800: #00255b;
+  --color-primary-900: #000c29;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

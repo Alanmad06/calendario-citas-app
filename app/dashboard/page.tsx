@@ -40,37 +40,16 @@ export default function DashboardPage() {
   const fetchAppointments = async () => {
     try {
       setIsLoading(true);
-      // This would be replaced with an actual API call
-      // const response = await fetch('/api/appointments');
-      // const data = await response.json();
-      // setAppointments(data);
+      // Make a real API call to fetch appointments
+      const response = await fetch('/api/appointments');
       
-      // For now, using mock data
-      setTimeout(() => {
-        setAppointments([
-          {
-            id: '1',
-            date: new Date(Date.now() + 86400000).toISOString(), // tomorrow
-            status: 'CONFIRMED',
-            service: {
-              name: 'Corte de cabello',
-              price: 25.00,
-              duration: 30,
-            },
-          },
-          {
-            id: '2',
-            date: new Date(Date.now() + 172800000).toISOString(), // day after tomorrow
-            status: 'PENDING',
-            service: {
-              name: 'Tinte de cabello',
-              price: 45.00,
-              duration: 60,
-            },
-          },
-        ]);
-        setIsLoading(false);
-      }, 1000);
+      if (!response.ok) {
+        throw new Error('Error fetching appointments');
+      }
+      
+      const data = await response.json();
+      setAppointments(data);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching appointments:', error);
       setIsLoading(false);

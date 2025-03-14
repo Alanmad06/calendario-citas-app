@@ -63,35 +63,16 @@ export default function BookingForm() {
   const loadServices = async () => {
     setIsLoading(true);
     try {
-      // This would be replaced with an actual API call
-      // const response = await fetch('/api/services');
-      // const data = await response.json();
-      // setServices(data);
+      // Make a real API call to fetch services
+      const response = await fetch('/api/services');
       
-      // For now, using mock data
-      setTimeout(() => {
-        setServices([
-          {
-            id: '1',
-            name: 'Corte de cabello',
-            duration: 30,
-            price: 25.00,
-          },
-          {
-            id: '2',
-            name: 'Tinte de cabello',
-            duration: 60,
-            price: 45.00,
-          },
-          {
-            id: '3',
-            name: 'Peinado',
-            duration: 45,
-            price: 35.00,
-          },
-        ]);
-        setIsLoading(false);
-      }, 500);
+      if (!response.ok) {
+        throw new Error('Error loading services');
+      }
+      
+      const data = await response.json();
+      setServices(data);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error loading services:', error);
       setIsLoading(false);
@@ -150,28 +131,26 @@ export default function BookingForm() {
       const [hours, minutes] = selectedTime.split(':').map(Number);
       appointmentDate.setHours(hours, minutes);
       
-      // This would be replaced with an actual API call
-      // const response = await fetch('/api/appointments', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     serviceId: selectedService.id,
-      //     date: appointmentDate.toISOString(),
-      //     userId: session?.user.id,
-      //   }),
-      // });
-      // 
-      // if (!response.ok) {
-      //   throw new Error('Error al crear la cita');
-      // }
+      // Make a real API call to create the appointment
+      const response = await fetch('/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          serviceId: selectedService.id,
+          date: appointmentDate.toISOString(),
+          notes: '',
+        }),
+      });
       
-      // Mock successful booking
-      setTimeout(() => {
-        // Redirect to dashboard with success message
-        router.push('/dashboard?booking=success');
-      }, 1000);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al crear la cita');
+      }
+      
+      // Redirect to dashboard with success message
+      router.push('/dashboard?booking=success');
     } catch (error) {
       console.error('Error booking appointment:', error);
       alert('Ocurrió un error al agendar la cita. Por favor intenta de nuevo.');

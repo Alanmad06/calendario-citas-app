@@ -1,9 +1,37 @@
 @import "tailwindcss";
 
 @theme {
-  --background: #171717;
-  --foreground: #171717;
-   /*--primary: #171717*/
+  /* Background colors */
+  --color-background: #f5f5f5;
+  --color-second-background: #ffffff;
+  
+  /* Foreground (text) colors */
+  --color-foreground: #171717;
+  --color-foreground-50: #f2f2f2;
+  --color-foreground-100: #e6e6e6;
+  --color-foreground-200: #cccccc;
+  --color-foreground-300: #b3b3b3;
+  --color-foreground-400: #999999;
+  --color-foreground-500: #808080;
+  --color-foreground-600: #666666;
+  --color-foreground-700: #4d4d4d;
+  --color-foreground-800: #333333;
+  --color-foreground-900: #171717;
+  
+  /* Title colors */
+  --color-foreground-title: #0f0f0f;
+  --color-foreground-title-50: #f0f0f0;
+  --color-foreground-title-100: #e0e0e0;
+  --color-foreground-title-200: #c2c2c2;
+  --color-foreground-title-300: #a3a3a3;
+  --color-foreground-title-400: #858585;
+  --color-foreground-title-500: #666666;
+  --color-foreground-title-600: #474747;
+  --color-foreground-title-700: #2e2e2e;
+  --color-foreground-title-800: #1a1a1a;
+  --color-foreground-title-900: #0f0f0f;
+  
+  /* Primary colors */
   --primary-foreground: #1a75ff;
   --color-primary: #0070f3; 
   --color-primary-50: #e6f0ff;
@@ -16,6 +44,8 @@
   --color-primary-700: #003e8e;
   --color-primary-800: #00255b;
   --color-primary-900: #000c29;
+  
+  /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

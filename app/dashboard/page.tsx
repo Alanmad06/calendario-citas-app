@@ -105,17 +105,17 @@ export default function DashboardPage() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600">Cargando...</p>
+          <p className="mt-4 text-foreground">Cargando...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Mi Panel</h1>
+          <h1 className="text-2xl font-bold text-foreground-title">Mi Panel</h1>
           <Button
             onClick={() => router.push('/dashboard/book')}
             className="bg-primary hover:bg-primary-600 text-white"
@@ -124,17 +124,17 @@ export default function DashboardPage() {
           </Button>
         </div>
 
-        <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+        <div className=" shadow overflow-hidden sm:rounded-lg mb-8  bg-second-background">
           <div className="px-4 py-5 sm:px-6">
-            <h2 className="text-lg font-medium text-gray-900">Mis Citas</h2>
-            <p className="mt-1 max-w-2xl text-sm text-gray-500">
+            <h2 className="text-lg font-medium text-foreground-title">Mis Citas</h2>
+            <p className="mt-1 max-w-2xl text-sm text-foreground">
               Aquí puedes ver todas tus citas programadas.
             </p>
           </div>
 
           {appointments.length === 0 ? (
-            <div className="px-4 py-5 sm:p-6 text-center">
-              <p className="text-gray-500">No tienes citas programadas.</p>
+            <div className="px-4 py-5 sm:p-6 text-center bg-second-background ">
+              <p className="text-foreground">No tienes citas programadas.</p>
               <Button
                 onClick={() => router.push('/dashboard/book')}
                 className="mt-4 bg-primary hover:bg-primary-600 text-white"
@@ -146,18 +146,18 @@ export default function DashboardPage() {
             <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
               <dl className="sm:divide-y sm:divide-gray-200">
                 {appointments.map((appointment) => (
-                  <div key={appointment.id} className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500">
+                  <div key={appointment.id} className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-second-background">
+                    <dt className="text-sm font-medium text-foreground">
                       {appointment.service.name}
                     </dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    <dd className="mt-1 text-sm text-foreground-title sm:mt-0 sm:col-span-2">
                       <div className="flex justify-between items-center">
                         <div>
                           <p>{formatDate(appointment.date)}</p>
-                          <p className="text-gray-500">
+                          <p className="text-foreground">
                             Duración: {appointment.service.duration} minutos
                           </p>
-                          <p className="text-gray-500">
+                          <p className="text-foreground">
                             Precio: ${appointment.service.price.toFixed(2)}
                           </p>
                         </div>
@@ -195,19 +195,19 @@ export default function DashboardPage() {
           )}
         </div>
 
-        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div className=" shadow overflow-hidden sm:rounded-lg bg-second-background">
           <div className="px-4 py-5 sm:px-6">
-            <h2 className="text-lg font-medium text-gray-900">Servicios Disponibles</h2>
-            <p className="mt-1 max-w-2xl text-sm text-gray-500">
+            <h2 className="text-lg font-medium text-foreground-title">Servicios Disponibles</h2>
+            <p className="mt-1 max-w-2xl text-sm text-foreground">
               Explora nuestros servicios y agenda una cita.
             </p>
           </div>
           <div className="border-t border-gray-200">
             <div className="px-4 py-5 sm:p-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <h3 className="font-medium text-gray-900">Corte de cabello</h3>
-                <p className="text-gray-500 mt-1">Duración: 30 minutos</p>
-                <p className="text-gray-900 font-medium mt-2">$25.00</p>
+                <h3 className="font-medium text-foreground-title">Corte de cabello</h3>
+                <p className="text-foreground mt-1">Duración: 30 minutos</p>
+                <p className="text-foreground-title font-medium mt-2">$25.00</p>
                 <Button
                   onClick={() => router.push('/dashboard/book?service=1')}
                   className="mt-4 w-full bg-primary hover:bg-primary-600 text-white"
@@ -216,9 +216,9 @@ export default function DashboardPage() {
                 </Button>
               </div>
               <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <h3 className="font-medium text-gray-900">Tinte de cabello</h3>
-                <p className="text-gray-500 mt-1">Duración: 60 minutos</p>
-                <p className="text-gray-900 font-medium mt-2">$45.00</p>
+                <h3 className="font-medium text-foreground-title">Tinte de cabello</h3>
+                <p className="text-foreground mt-1">Duración: 60 minutos</p>
+                <p className="text-foreground-title font-medium mt-2">$45.00</p>
                 <Button
                   onClick={() => router.push('/dashboard/book?service=2')}
                   className="mt-4 w-full bg-primary hover:bg-primary-600 text-white"
@@ -227,9 +227,9 @@ export default function DashboardPage() {
                 </Button>
               </div>
               <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <h3 className="font-medium text-gray-900">Peinado</h3>
-                <p className="text-gray-500 mt-1">Duración: 45 minutos</p>
-                <p className="text-gray-900 font-medium mt-2">$35.00</p>
+                <h3 className="font-medium text-foreground-title">Peinado</h3>
+                <p className="text-foreground mt-1">Duración: 45 minutos</p>
+                <p className="text-foreground-title font-medium mt-2">$35.00</p>
                 <Button
                   onClick={() => router.push('/dashboard/book?service=3')}
                   className="mt-4 w-full bg-primary hover:bg-primary-600 text-white"

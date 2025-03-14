@@ -28,6 +28,7 @@ export default function LoginPage() {
 
       if (result?.error) {
         setError('Credenciales inválidas');
+        console.error(result.error)
         setIsLoading(false);
         return;
       }
@@ -45,10 +46,10 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
       <div className="w-full max-w-md space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-foreground-title">
             Iniciar sesión
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-foreground">
             ¿No tienes una cuenta?{' '}
             <Link href="/register" className="font-medium text-primary hover:text-primary-600">
               Regístrate
@@ -70,7 +71,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="relative block w-full rounded-t-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                className="relative block w-full rounded-t-md border-0 py-1.5 px-3 text-foreground-title ring-1 ring-inset ring-gray-300 placeholder:text-foreground-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
                 placeholder="Correo electrónico"
               />
             </div>
@@ -86,7 +87,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="relative block w-full rounded-b-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                className="relative block w-full rounded-b-md border-0 py-1.5 px-3 text-foreground-title ring-1 ring-inset ring-gray-300 placeholder:text-foreground-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
                 placeholder="Contraseña"
               />
             </div>
@@ -118,7 +119,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-                className="flex items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 w-full"
+                className="flex items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-gray-50 w-full"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

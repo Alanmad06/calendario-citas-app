@@ -184,18 +184,18 @@ export default function BookingForm() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600">Cargando...</p>
+          <p className="mt-4 text-foreground">Cargando...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Agendar una cita</h1>
-          <p className="mt-2 text-gray-600">
+          <h1 className="text-2xl font-bold text-foreground-title">Agendar una cita</h1>
+          <p className="mt-2 text-foreground">
             Selecciona el servicio, fecha y hora para tu cita.
           </p>
         </div>
@@ -204,7 +204,7 @@ export default function BookingForm() {
           <form onSubmit={handleSubmit} className="p-6 space-y-8">
             {/* Service Selection */}
             <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-4">1. Selecciona un servicio</h2>
+              <h2 className="text-lg font-medium text-foreground-title mb-4">1. Selecciona un servicio</h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {services.map((service) => (
                   <div
@@ -212,9 +212,9 @@ export default function BookingForm() {
                     className={`border rounded-lg p-4 cursor-pointer transition-all ${selectedService?.id === service.id ? 'border-primary-500 ring-2 ring-primary-200' : 'hover:border-gray-300'}`}
                     onClick={() => setSelectedService(service)}
                   >
-                    <h3 className="font-medium text-gray-900">{service.name}</h3>
-                    <p className="text-gray-500 mt-1">Duración: {service.duration} minutos</p>
-                    <p className="text-gray-900 font-medium mt-2">${service.price.toFixed(2)}</p>
+                    <h3 className="font-medium text-foreground-title">{service.name}</h3>
+                    <p className="text-foreground mt-1">Duración: {service.duration} minutos</p>
+                    <p className="text-foreground-title font-medium mt-2">${service.price.toFixed(2)}</p>
                   </div>
                 ))}
               </div>
@@ -222,7 +222,7 @@ export default function BookingForm() {
 
             {/* Date Selection */}
             <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-4">2. Selecciona una fecha</h2>
+              <h2 className="text-lg font-medium text-foreground-title mb-4">2. Selecciona una fecha</h2>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
                 {availableDates.map((date) => (
                   <div
@@ -236,7 +236,7 @@ export default function BookingForm() {
                     <p className="text-lg font-bold mt-1">
                       {format(date, 'd', { locale: es })}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-foreground">
                       {format(date, 'MMMM', { locale: es })}
                     </p>
                   </div>
@@ -247,7 +247,7 @@ export default function BookingForm() {
             {/* Time Selection */}
             {selectedDate && (
               <div>
-                <h2 className="text-lg font-medium text-gray-900 mb-4">3. Selecciona una hora</h2>
+                <h2 className="text-lg font-medium text-foreground-title mb-4">3. Selecciona una hora</h2>
                 {availableTimes.length > 0 ? (
                   <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
                     {availableTimes.map((time) => (
@@ -261,7 +261,7 @@ export default function BookingForm() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-gray-500">No hay horarios disponibles para esta fecha.</p>
+                  <p className="text-foreground">No hay horarios disponibles para esta fecha.</p>
                 )}
               </div>
             )}
@@ -269,7 +269,7 @@ export default function BookingForm() {
             {/* Summary and Submit */}
             {selectedService && selectedDate && selectedTime && (
               <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-                <h2 className="text-lg font-medium text-gray-900 mb-2">Resumen de tu cita</h2>
+                <h2 className="text-lg font-medium text-foreground-title mb-2">Resumen de tu cita</h2>
                 <div className="space-y-2">
                   <p><span className="font-medium">Servicio:</span> {selectedService.name}</p>
                   <p><span className="font-medium">Fecha:</span> {format(selectedDate, 'PPPP', { locale: es })}</p>

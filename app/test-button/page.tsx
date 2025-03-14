@@ -30,7 +30,7 @@ export default function TestButtonPage() {
       </div>
       
       <div className="mt-8">
-        <p className="text-sm text-gray-500">The default button should have the primary background color (#0070f3)</p>
+        <p className="text-sm text-foreground">The default button should have the primary background color (#0070f3)</p>
       </div>
     </div>
   );

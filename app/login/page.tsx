@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -110,6 +111,7 @@ export default function LoginPage() {
               {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
             </Button>
           </div>
+       
 
           <div className="flex items-center justify-center">
             <div className="text-sm">

@@ -14,6 +14,14 @@ interface Service {
   price: number;
 }
 
+interface Stylist {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
+  phoneNumber?: string;
+}
+
 export default function BookingForm() {
   const { status } = useSession();
   const router = useRouter();
@@ -23,9 +31,11 @@ export default function BookingForm() {
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedStylist, setSelectedStylist] = useState<Stylist | null>(null);
   const [availableDates, setAvailableDates] = useState<Date[]>([]);
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [services, setServices] = useState<Service[]>([]);
+  const [stylists, setStylists] = useState<Stylist[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -39,6 +49,7 @@ export default function BookingForm() {
     // Load services and initialize booking form
     if (status === 'authenticated') {
       loadServices();
+      loadStylists();
       generateAvailableDates();
     }
   }, [status, router]);
@@ -76,6 +87,22 @@ export default function BookingForm() {
     } catch (error) {
       console.error('Error loading services:', error);
       setIsLoading(false);
+    }
+  };
+
+  const loadStylists = async () => {
+    try {
+      // Make a real API call to fetch stylists
+      const response = await fetch('/api/stylists');
+      
+      if (!response.ok) {
+        throw new Error('Error loading stylists');
+      }
+      
+      const data = await response.json();
+      setStylists(data);
+    } catch (error) {
+      console.error('Error loading stylists:', error);
     }
   };
 
@@ -118,8 +145,8 @@ export default function BookingForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!selectedService || !selectedDate || !selectedTime) {
-      alert('Por favor selecciona un servicio, fecha y hora');
+    if (!selectedService || !selectedDate || !selectedTime || !selectedStylist) {
+      alert('Por favor selecciona un servicio, estilista, fecha y hora');
       return;
     }
     
@@ -139,6 +166,7 @@ export default function BookingForm() {
         },
         body: JSON.stringify({
           serviceId: selectedService.id,
+          stylistId: selectedStylist.id,
           date: appointmentDate.toISOString(),
           notes: '',
         }),
@@ -199,9 +227,43 @@ export default function BookingForm() {
               </div>
             </div>
 
+            {/* Stylist Selection */}
+            <div>
+              <h2 className="text-lg font-medium text-foreground-title mb-4">2. Selecciona un estilista</h2>
+              {stylists.length > 0 ? (
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {stylists.map((stylist) => (
+                    <div
+                      key={stylist.id}
+                      className={`border rounded-lg p-4 cursor-pointer transition-all ${selectedStylist?.id === stylist.id ? 'border-primary-500 ring-2 ring-primary-200' : 'hover:border-gray-300'}`}
+                      onClick={() => setSelectedStylist(stylist)}
+                    >
+                      <div className="flex items-center">
+                        {stylist.image ? (
+                          <img src={stylist.image} alt={stylist.name} className="w-10 h-10 rounded-full mr-3" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <span className="text-gray-500 font-medium">{stylist.name?.charAt(0)}</span>
+                          </div>
+                        )}
+                        <div>
+                          <h3 className="font-medium text-foreground-title">{stylist.name}</h3>
+                          {stylist.phoneNumber && (
+                            <p className="text-foreground text-sm">{stylist.phoneNumber}</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-foreground">No hay estilistas disponibles en este momento.</p>
+              )}
+            </div>
+
             {/* Date Selection */}
             <div>
-              <h2 className="text-lg font-medium text-foreground-title mb-4">2. Selecciona una fecha</h2>
+              <h2 className="text-lg font-medium text-foreground-title mb-4">3. Selecciona una fecha</h2>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
                 {availableDates.map((date) => (
                   <div
@@ -226,7 +288,7 @@ export default function BookingForm() {
             {/* Time Selection */}
             {selectedDate && (
               <div>
-                <h2 className="text-lg font-medium text-foreground-title mb-4">3. Selecciona una hora</h2>
+                <h2 className="text-lg font-medium text-foreground-title mb-4">4. Selecciona una hora</h2>
                 {availableTimes.length > 0 ? (
                   <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
                     {availableTimes.map((time) => (
@@ -246,11 +308,12 @@ export default function BookingForm() {
             )}
 
             {/* Summary and Submit */}
-            {selectedService && selectedDate && selectedTime && (
+            {selectedService && selectedStylist && selectedDate && selectedTime && (
               <div className="mt-8 p-4 bg-gray-50 rounded-lg">
                 <h2 className="text-lg font-medium text-foreground-title mb-2">Resumen de tu cita</h2>
                 <div className="space-y-2">
                   <p><span className="font-medium">Servicio:</span> {selectedService.name}</p>
+                  <p><span className="font-medium">Estilista:</span> {selectedStylist.name}</p>
                   <p><span className="font-medium">Fecha:</span> {format(selectedDate, 'PPPP', { locale: es })}</p>
                   <p><span className="font-medium">Hora:</span> {selectedTime}</p>
                   <p><span className="font-medium">Duración:</span> {selectedService.duration} minutos</p>
@@ -269,7 +332,7 @@ export default function BookingForm() {
               </Button>
               <Button
                 type="submit"
-                disabled={!selectedService || !selectedDate || !selectedTime || isSubmitting}
+                disabled={!selectedService || !selectedStylist || !selectedDate || !selectedTime || isSubmitting}
                 className="bg-primary hover:bg-primary-600 text-white"
               >
                 {isSubmitting ? 'Agendando...' : 'Confirmar cita'}

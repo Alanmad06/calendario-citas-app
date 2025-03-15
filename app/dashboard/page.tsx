@@ -16,6 +16,13 @@ interface Appointment {
     price: number;
     duration: number;
   };
+  stylist?: {
+    id: string;
+    name: string;
+    email: string;
+    image?: string;
+    phoneNumber?: string;
+  };
 }
 
 interface Service {
@@ -171,6 +178,11 @@ export default function DashboardPage() {
                           <p className="text-foreground">
                             Precio: ${appointment.service.price}
                           </p>
+                          {appointment.stylist && (
+                            <p className="text-foreground">
+                              Estilista: {appointment.stylist.name}
+                            </p>
+                          )}
                         </div>
                         <div>
                           <span

@@ -11,19 +11,20 @@ datasource db {
 }
 
 model User {
-  id            String       @id @default(cuid())
-  name          String?
-  email         String       @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  phoneNumber   String?
-  role          Role         @default(USER)
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  accounts      Account[]
-  sessions      Session[]
-  appointments  Appointment[]
+  id                String       @id @default(cuid())
+  name              String?
+  email             String       @unique
+  emailVerified     DateTime?
+  image             String?
+  password          String?
+  phoneNumber       String?
+  role              Role         @default(USER)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  accounts          Account[]
+  sessions          Session[]
+  appointments      Appointment[]
+  stylistAppointments Appointment[] @relation("StylistAppointments")
 }
 
 model Account {
@@ -76,6 +77,7 @@ model Appointment {
   id          String   @id @default(cuid())
   userId      String
   serviceId   String
+  stylistId   String?
   date        DateTime
   status      AppointmentStatus @default(PENDING)
   notes       String?
@@ -83,6 +85,7 @@ model Appointment {
   updatedAt   DateTime @updatedAt
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   service     Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  stylist     User?    @relation("StylistAppointments", fields: [stylistId], references: [id], onDelete: SetNull)
 }
 
 enum Role {

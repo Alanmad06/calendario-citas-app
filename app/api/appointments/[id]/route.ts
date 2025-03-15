@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
       },
       include: {
         service: true,
+        stylist: true,
       },
     });
 
@@ -135,6 +136,7 @@ export async function PATCH(request: NextRequest) {
       },
       include: {
         service: true,
+        stylist: true,
       },
     });
 

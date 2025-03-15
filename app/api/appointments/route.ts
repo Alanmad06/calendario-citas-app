@@ -26,6 +26,7 @@ export async function GET() {
       },
       include: {
         service: true,
+        stylist: true,
       },
       orderBy: {
         date: 'asc',
@@ -60,7 +61,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json();
-    const { serviceId, date, notes } = body;
+    const { serviceId, stylistId, date, notes } = body;
 
     // Validate required fields
     if (!serviceId || !date) {
@@ -75,12 +76,14 @@ export async function POST(request: NextRequest) {
       data: {
         userId,
         serviceId,
+        stylistId,
         date: new Date(date),
         notes,
         status: 'PENDING',
       },
       include: {
         service: true,
+        stylist: true,
       },
     });
 

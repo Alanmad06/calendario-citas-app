@@ -65,11 +65,14 @@ export default function BookingForm() {
   }, [serviceId, services]);
 
   useEffect(() => {
-    // Generate available time slots when date is selected
-    if (selectedDate) {
+    // Generate available time slots when date and stylist are selected
+    if (selectedDate && selectedStylist && selectedService) {
+      fetchAvailableTimes(selectedDate, selectedStylist.id, selectedService.id);
+    } else if (selectedDate) {
+      // Fallback to basic time slots if stylist or service not selected
       generateAvailableTimes(selectedDate);
     }
-  }, [selectedDate]);
+  }, [selectedDate, selectedStylist, selectedService]);
 
   const loadServices = async () => {
     setIsLoading(true);
@@ -120,6 +123,33 @@ export default function BookingForm() {
     }
     
     setAvailableDates(dates);
+  };
+
+  const fetchAvailableTimes = async (date: Date, stylistId: string, serviceId: string) => {
+    try {
+      setIsLoading(true);
+      // Format date as ISO string for the API
+      const formattedDate = date.toISOString().split('T')[0];
+      
+      // Call the availability API
+      const response = await fetch(
+        `/api/appointments/availability?stylistId=${stylistId}&date=${formattedDate}&serviceId=${serviceId}`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Error fetching available times');
+      }
+      
+      const data = await response.json();
+      setAvailableTimes(data.availableTimeSlots);
+      setSelectedTime(null); // Reset selected time when parameters change
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error fetching available times:', error);
+      // Fallback to basic time slots generation if API fails
+      generateAvailableTimes(date);
+      setIsLoading(false);
+    }
   };
 
   const generateAvailableTimes = (date: Date) => {
@@ -174,14 +204,22 @@ export default function BookingForm() {
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al crear la cita');
+        
+        // Handle conflict (time slot no longer available)
+        if (response.status === 409) {
+          // Refresh available times
+          await fetchAvailableTimes(selectedDate, selectedStylist.id, selectedService.id);
+          throw new Error(errorData.error || 'Este horario ya no está disponible. Por favor selecciona otro.');
+        } else {
+          throw new Error(errorData.error || 'Error al crear la cita');
+        }
       }
       
       // Redirect to dashboard with success message
       router.push('/dashboard?booking=success');
-    } catch (error) {
+    } catch (error: Error | unknown) {
       console.error('Error booking appointment:', error);
-      alert('Ocurrió un error al agendar la cita. Por favor intenta de nuevo.');
+      alert(error instanceof Error ? error.message : 'Ocurrió un error al agendar la cita. Por favor intenta de nuevo.');
       setIsSubmitting(false);
     }
   };

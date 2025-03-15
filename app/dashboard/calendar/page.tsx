@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Calendar } from '@/components/ui/calendar';
+import { Loading } from '@/components/ui/loading';
 import { format, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -105,15 +106,9 @@ export default function CalendarPage() {
     }
   };
 
-  if (status === 'loading' || isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-foreground">Cargando...</p>
-        </div>
-      </div>
-    );
+  // Show loading state for authentication status
+  if (status === 'loading') {
+    return <Loading size="large" text="Verificando sesión..." />
   }
 
   return (
@@ -131,7 +126,13 @@ export default function CalendarPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <Calendar appointments={appointments} onDateClick={handleDateClick} />
+            {isLoading ? (
+              <div className="bg-white shadow rounded-lg p-4">
+                <Loading size="medium" text="Cargando citas..." />
+              </div>
+            ) : (
+              <Calendar appointments={appointments} onDateClick={handleDateClick} />
+            )}
           </div>
           
           <div className="lg:col-span-1">

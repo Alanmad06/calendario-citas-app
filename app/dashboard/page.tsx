@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { Loading } from '@/components/ui/loading';
 import { CancelAppointmentModal } from '@/components/ui/cancel-appointment-modal';
 import { ConfirmAppointmentModal } from '@/components/ui/confirm-appointment-modal';
 
@@ -116,15 +117,9 @@ export default function DashboardPage() {
     }
   };
 
-  if (status === 'loading' || isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-foreground">Cargando...</p>
-        </div>
-      </div>
-    );
+  // Show loading state for authentication status
+  if (status === 'loading') {
+    return <Loading size="large" text="Verificando sesión..." />
   }
 
   const handleCancelSuccess = async () => {
@@ -164,7 +159,11 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          {appointments.length === 0 ? (
+          {isLoading ? (
+            <div className="px-4 py-5 sm:p-6 bg-second-background">
+              <Loading size="medium" text="Cargando citas..." />
+            </div>
+          ) : appointments.length === 0 ? (
             <div className="px-4 py-5 sm:p-6 text-center bg-second-background ">
               <p className="text-foreground">No tienes citas programadas.</p>
               <Button

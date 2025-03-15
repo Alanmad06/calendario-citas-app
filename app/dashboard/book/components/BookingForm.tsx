@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
+import { Loading } from '@/components/ui/loading';
 import { format, addDays, startOfDay, addHours, isBefore } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -224,16 +225,13 @@ export default function BookingForm() {
     }
   };
 
-  if (status === 'loading' || isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-foreground">Cargando...</p>
-        </div>
-      </div>
-    );
+  // Show loading state for authentication status
+  if (status === 'loading') {
+    return <Loading size="large" text="Verificando sesión..." />
   }
+  
+  // Render the form with loading indicators for specific sections
+  // instead of blocking the entire screen
 
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
@@ -250,19 +248,23 @@ export default function BookingForm() {
             {/* Service Selection */}
             <div>
               <h2 className="text-lg font-medium text-foreground-title mb-4">1. Selecciona un servicio</h2>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {services.map((service) => (
-                  <div
-                    key={service.id}
-                    className={`border rounded-lg p-4 cursor-pointer transition-all ${selectedService?.id === service.id ? 'border-primary-500 ring-2 ring-primary-200' : 'hover:border-gray-300'}`}
-                    onClick={() => setSelectedService(service)}
-                  >
-                    <h3 className="font-medium text-foreground-title">{service.name}</h3>
-                    <p className="text-foreground mt-1">Duración: {service.duration} minutos</p>
-                    <p className="text-foreground-title font-medium mt-2">${service.price}</p>
-                  </div>
-                ))}
-              </div>
+              {isLoading ? (
+                <Loading size="small" text="Cargando servicios..." />
+              ) : (
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {services.map((service) => (
+                    <div
+                      key={service.id}
+                      className={`border rounded-lg p-4 cursor-pointer transition-all ${selectedService?.id === service.id ? 'border-primary-500 ring-2 ring-primary-200' : 'hover:border-gray-300'}`}
+                      onClick={() => setSelectedService(service)}
+                    >
+                      <h3 className="font-medium text-foreground-title">{service.name}</h3>
+                      <p className="text-foreground mt-1">Duración: {service.duration} minutos</p>
+                      <p className="text-foreground-title font-medium mt-2">${service.price}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Stylist Selection */}
@@ -327,7 +329,9 @@ export default function BookingForm() {
             {selectedDate && (
               <div>
                 <h2 className="text-lg font-medium text-foreground-title mb-4">4. Selecciona una hora</h2>
-                {availableTimes.length > 0 ? (
+                {isLoading ? (
+                  <Loading size="small" text="Cargando horarios disponibles..." />
+                ) : availableTimes.length > 0 ? (
                   <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
                     {availableTimes.map((time) => (
                       <div
@@ -371,8 +375,11 @@ export default function BookingForm() {
               <Button
                 type="submit"
                 disabled={!selectedService || !selectedStylist || !selectedDate || !selectedTime || isSubmitting}
-                className="bg-primary hover:bg-primary-600 text-white"
+                className="bg-primary hover:bg-primary-600 text-white flex items-center gap-2"
               >
+                {isSubmitting && (
+                  <div className="animate-spin rounded-full h-4 w-4 border-t-1 border-b-1 border-white"></div>
+                )}
                 {isSubmitting ? 'Agendando...' : 'Confirmar cita'}
               </Button>
             </div>

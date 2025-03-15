@@ -5,6 +5,7 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSam
 import { es } from 'date-fns/locale';
 import { Button } from './button';
 
+
 interface Appointment {
   id: string;
   date: string;

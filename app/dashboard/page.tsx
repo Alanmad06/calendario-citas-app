@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { CancelAppointmentModal } from '@/components/ui/cancel-appointment-modal';
 
 
 interface Appointment {
@@ -17,12 +18,22 @@ interface Appointment {
   };
 }
 
+interface Service {
+  id: string;
+  name: string;
+  duration: number;
+  price: number;
+}
+
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   console.log(session)
   const router = useRouter();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState<string>('');
 
   useEffect(() => {
     // Redirect to login if not authenticated
@@ -34,6 +45,7 @@ export default function DashboardPage() {
     // Fetch user appointments if authenticated
     if (status === 'authenticated') {
       fetchAppointments();
+      fetchServices();
     }
   }, [status, router]);
 
@@ -53,6 +65,22 @@ export default function DashboardPage() {
     } catch (error) {
       console.error('Error fetching appointments:', error);
       setIsLoading(false);
+    }
+  };
+
+  const fetchServices = async () => {
+    try {
+      // Make a real API call to fetch services
+      const response = await fetch('/api/services');
+      
+      if (!response.ok) {
+        throw new Error('Error fetching services');
+      }
+      
+      const data = await response.json();
+      setServices(data);
+    } catch (error) {
+      console.error('Error fetching services:', error);
     }
   };
 
@@ -90,6 +118,10 @@ export default function DashboardPage() {
     );
   }
 
+  const handleCancelSuccess = async () => {
+    await fetchAppointments();
+  };
+
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -125,7 +157,7 @@ export default function DashboardPage() {
             <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
               <dl className="sm:divide-y sm:divide-gray-200">
                 {appointments.map((appointment) => (
-                  <div key={appointment.id} className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-second-background">
+                  <div key={appointment.id} className={`py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-second-background ${appointment.status === 'CANCELLED' ? 'line-through text-gray-500' : ''}`}>
                     <dt className="text-sm font-medium text-foreground">
                       {appointment.service.name}
                     </dt>
@@ -137,7 +169,7 @@ export default function DashboardPage() {
                             Duración: {appointment.service.duration} minutos
                           </p>
                           <p className="text-foreground">
-                            Precio: ${appointment.service.price.toFixed(2)}
+                            Precio: ${appointment.service.price}
                           </p>
                         </div>
                         <div>
@@ -159,7 +191,13 @@ export default function DashboardPage() {
                               Ver detalles
                             </button>
                             {appointment.status !== 'CANCELLED' && appointment.status !== 'COMPLETED' && (
-                              <button className="text-sm text-red-600 hover:text-red-800">
+                              <button 
+                                className="text-sm text-red-600 hover:text-red-800"
+                                onClick={() => {
+                                  setSelectedAppointmentId(appointment.id);
+                                  setCancelModalOpen(true);
+                                }}
+                              >
                                 Cancelar
                               </button>
                             )}
@@ -183,43 +221,31 @@ export default function DashboardPage() {
           </div>
           <div className="border-t border-gray-200">
             <div className="px-4 py-5 sm:p-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <h3 className="font-medium text-foreground-title">Corte de cabello</h3>
-                <p className="text-foreground mt-1">Duración: 30 minutos</p>
-                <p className="text-foreground-title font-medium mt-2">$25.00</p>
-                <Button
-                  onClick={() => router.push('/dashboard/book?service=1')}
-                  className="mt-4 w-full bg-primary hover:bg-primary-600 text-white"
-                >
-                  Reservar
-                </Button>
-              </div>
-              <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <h3 className="font-medium text-foreground-title">Tinte de cabello</h3>
-                <p className="text-foreground mt-1">Duración: 60 minutos</p>
-                <p className="text-foreground-title font-medium mt-2">$45.00</p>
-                <Button
-                  onClick={() => router.push('/dashboard/book?service=2')}
-                  className="mt-4 w-full bg-primary hover:bg-primary-600 text-white"
-                >
-                  Reservar
-                </Button>
-              </div>
-              <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <h3 className="font-medium text-foreground-title">Peinado</h3>
-                <p className="text-foreground mt-1">Duración: 45 minutos</p>
-                <p className="text-foreground-title font-medium mt-2">$35.00</p>
-                <Button
-                  onClick={() => router.push('/dashboard/book?service=3')}
-                  className="mt-4 w-full bg-primary hover:bg-primary-600 text-white"
-                >
-                  Reservar
-                </Button>
-              </div>
+              {services.map((service) => (
+                <div key={service.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <h3 className="font-medium text-foreground-title">{service.name}</h3>
+                  <p className="text-foreground mt-1">Duración: {service.duration} minutos</p>
+                  <p className="text-foreground-title font-medium mt-2">${service.price}</p>
+                  <Button
+                    onClick={() => router.push(`/dashboard/book?service=${service.id}`)}
+                    className="mt-4 w-full bg-primary hover:bg-primary-600 text-white"
+                  >
+                    Reservar
+                  </Button>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Cancel Appointment Modal */}
+      <CancelAppointmentModal 
+        isOpen={cancelModalOpen}
+        onClose={() => setCancelModalOpen(false)}
+        appointmentId={selectedAppointmentId}
+        onSuccess={handleCancelSuccess}
+      />
     </div>
   );
 }

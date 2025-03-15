@@ -193,7 +193,7 @@ export default function BookingForm() {
                   >
                     <h3 className="font-medium text-foreground-title">{service.name}</h3>
                     <p className="text-foreground mt-1">Duración: {service.duration} minutos</p>
-                    <p className="text-foreground-title font-medium mt-2">${service.price.toFixed(2)}</p>
+                    <p className="text-foreground-title font-medium mt-2">${service.price}</p>
                   </div>
                 ))}
               </div>
@@ -254,7 +254,7 @@ export default function BookingForm() {
                   <p><span className="font-medium">Fecha:</span> {format(selectedDate, 'PPPP', { locale: es })}</p>
                   <p><span className="font-medium">Hora:</span> {selectedTime}</p>
                   <p><span className="font-medium">Duración:</span> {selectedService.duration} minutos</p>
-                  <p><span className="font-medium">Precio:</span> ${selectedService.price.toFixed(2)}</p>
+                  <p><span className="font-medium">Precio:</span> ${selectedService.price}</p>
                 </div>
               </div>
             )}

@@ -6,6 +6,7 @@ export async function GET() {
   try {
     // Get the authenticated user session
     const session = await getAuthSession();
+    console.log(session)
 
     // Check if user is authenticated
     if (!session?.user) {

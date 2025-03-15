@@ -5,6 +5,8 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Calendar } from '@/components/ui/calendar';
 import { Loading } from '@/components/ui/loading';
+import { CalendarSkeleton } from '@/components/ui/skeletons/calendar-skeleton';
+import { AppointmentSkeleton } from '@/components/ui/skeletons/appointment-skeleton';
 import { format, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -127,29 +129,30 @@ export default function CalendarPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             {isLoading ? (
-              <div className="bg-white shadow rounded-lg p-4">
-                <Loading size="medium" text="Cargando citas..." />
-              </div>
+              <CalendarSkeleton />
             ) : (
               <Calendar appointments={appointments} onDateClick={handleDateClick} />
             )}
           </div>
           
           <div className="lg:col-span-1">
-            <div className="bg-white shadow rounded-lg p-4">
-              <h2 className="text-lg font-medium text-foreground-title mb-4">
-                {selectedDate ? (
-                  <span>Citas para {format(selectedDate, 'PPPP', { locale: es })}</span>
-                ) : (
-                  <span>Selecciona una fecha para ver las citas</span>
+            {isLoading ? (
+              <AppointmentSkeleton />
+            ) : (
+              <div className="bg-white shadow rounded-lg p-4">
+                <h2 className="text-lg font-medium text-foreground-title mb-4">
+                  {selectedDate ? (
+                    <span>Citas para {format(selectedDate, 'PPPP', { locale: es })}</span>
+                  ) : (
+                    <span>Selecciona una fecha para ver las citas</span>
+                  )}
+                </h2>
+
+                {selectedDate && filteredAppointments.length === 0 && (
+                  <p className="text-foreground">No hay citas para esta fecha.</p>
                 )}
-              </h2>
 
-              {selectedDate && filteredAppointments.length === 0 && (
-                <p className="text-foreground">No hay citas para esta fecha.</p>
-              )}
-
-              {filteredAppointments.length > 0 && (
+                {filteredAppointments.length > 0 && (
                 <div className="space-y-4">
                   {filteredAppointments.map((appointment) => (
                     <div 
@@ -196,6 +199,7 @@ export default function CalendarPage() {
                 </div>
               )}
             </div>
+          )}
           </div>
         </div>
       </div>

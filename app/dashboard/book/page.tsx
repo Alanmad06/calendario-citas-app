@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
-import { Loading } from '@/components/ui/loading';
 import BookingForm from './components/BookingForm';
+import { BookingFormSkeleton } from '@/components/ui/skeletons/booking-form-skeleton';
 
 export default function BookingPage() {
   return (
-    <Suspense fallback={<Loading size="large" text="Cargando formulario..." />}>
+    <Suspense fallback={<BookingFormSkeleton />}>
       <BookingForm />
     </Suspense>
   );

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Loading } from '@/components/ui/loading';
 import { CancelAppointmentModal } from '@/components/ui/cancel-appointment-modal';
 import { ConfirmAppointmentModal } from '@/components/ui/confirm-appointment-modal';
+import { DashboardSkeleton } from '@/components/ui/skeletons/dashboard-skeleton';
 
 
 interface Appointment {
@@ -161,7 +162,7 @@ export default function DashboardPage() {
 
           {isLoading ? (
             <div className="px-4 py-5 sm:p-6 bg-second-background">
-              <Loading size="medium" text="Cargando citas..." />
+              <DashboardSkeleton />
             </div>
           ) : appointments.length === 0 ? (
             <div className="px-4 py-5 sm:p-6 text-center bg-second-background ">

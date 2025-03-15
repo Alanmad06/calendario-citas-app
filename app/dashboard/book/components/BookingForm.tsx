@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Loading } from '@/components/ui/loading';
 import { format, addDays, startOfDay, addHours, isBefore } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface Service {
   id: string;
@@ -249,7 +250,17 @@ export default function BookingForm() {
             <div>
               <h2 className="text-lg font-medium text-foreground-title mb-4">1. Selecciona un servicio</h2>
               {isLoading ? (
-                <Loading size="small" text="Cargando servicios..." />
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {Array(6).fill(0).map((_, index) => (
+                      <div key={index} className="border rounded-lg p-4">
+                        <Skeleton variant="text" width="100%" height={32} className="mb-2" animation="wave" />
+                        <Skeleton variant="text" width="40%" height={20} className="mb-1" animation="wave" />
+                        <Skeleton variant="text" width="30%" height={20} animation="wave" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               ) : (
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {services.map((service) => (
@@ -330,7 +341,13 @@ export default function BookingForm() {
               <div>
                 <h2 className="text-lg font-medium text-foreground-title mb-4">4. Selecciona una hora</h2>
                 {isLoading ? (
-                  <Loading size="small" text="Cargando horarios disponibles..." />
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
+                      {Array(18).fill(0).map((_, index) => (
+                        <Skeleton key={index} variant="rectangular" width="100%" height={41.5} className="rounded-md" animation="wave" />
+                      ))}
+                    </div>
+                  </div>
                 ) : availableTimes.length > 0 ? (
                   <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
                     {availableTimes.map((time) => (

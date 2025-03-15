@@ -16,7 +16,7 @@ export function Skeleton({
   animation = 'wave',
 }: SkeletonProps) {
   // Base classes for all skeleton variants
-  const baseClasses = 'bg-gray-100 dark:bg-gray-600';
+  const baseClasses = 'bg-gray-100 dark:bg-gray-200';
   
   // Animation classes
   const animationClasses = {

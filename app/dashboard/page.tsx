@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { CancelAppointmentModal } from '@/components/ui/cancel-appointment-modal';
+import { ConfirmAppointmentModal } from '@/components/ui/confirm-appointment-modal';
 
 
 interface Appointment {
@@ -40,6 +41,7 @@ export default function DashboardPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [selectedAppointmentId, setSelectedAppointmentId] = useState<string>('');
 
   useEffect(() => {
@@ -129,17 +131,29 @@ export default function DashboardPage() {
     await fetchAppointments();
   };
 
+  const handleConfirmSuccess = async () => {
+    await fetchAppointments();
+  };
+
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold text-foreground-title">Mi Panel</h1>
-          <Button
-            onClick={() => router.push('/dashboard/book')}
-            className="bg-primary hover:bg-primary-600 text-white"
-          >
-            Agendar nueva cita
-          </Button>
+          <div className="flex space-x-4">
+            <Button
+              onClick={() => router.push('/dashboard/calendar')}
+              className="bg-gray-100 text-gray-800 hover:bg-gray-200"
+            >
+              Ver calendario
+            </Button>
+            <Button
+              onClick={() => router.push('/dashboard/book')}
+              className="bg-primary hover:bg-primary-600 text-white"
+            >
+              Agendar nueva cita
+            </Button>
+          </div>
         </div>
 
         <div className=" shadow overflow-hidden sm:rounded-lg mb-8  bg-second-background">
@@ -203,15 +217,28 @@ export default function DashboardPage() {
                               Ver detalles
                             </button>
                             {appointment.status !== 'CANCELLED' && appointment.status !== 'COMPLETED' && (
-                              <button 
-                                className="text-sm text-red-600 hover:text-red-800"
-                                onClick={() => {
-                                  setSelectedAppointmentId(appointment.id);
-                                  setCancelModalOpen(true);
-                                }}
-                              >
-                                Cancelar
-                              </button>
+                              <div className="flex space-x-4">
+                                {appointment.status === 'PENDING' && (
+                                  <button 
+                                    className="text-sm text-green-600 hover:text-green-800"
+                                    onClick={() => {
+                                      setSelectedAppointmentId(appointment.id);
+                                      setConfirmModalOpen(true);
+                                    }}
+                                  >
+                                    Confirmar
+                                  </button>
+                                )}
+                                <button 
+                                  className="text-sm text-red-600 hover:text-red-800"
+                                  onClick={() => {
+                                    setSelectedAppointmentId(appointment.id);
+                                    setCancelModalOpen(true);
+                                  }}
+                                >
+                                  Cancelar
+                                </button>
+                              </div>
                             )}
                           </div>
                         </div>
@@ -257,6 +284,14 @@ export default function DashboardPage() {
         onClose={() => setCancelModalOpen(false)}
         appointmentId={selectedAppointmentId}
         onSuccess={handleCancelSuccess}
+      />
+
+      {/* Confirm Appointment Modal */}
+      <ConfirmAppointmentModal
+        isOpen={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        appointmentId={selectedAppointmentId}
+        onSuccess={handleConfirmSuccess}
       />
     </div>
   );
